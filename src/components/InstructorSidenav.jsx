@@ -1,4 +1,3 @@
-// src/components/Notes.jsx
 import React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -12,7 +11,6 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -26,19 +24,16 @@ import PsychologyIcon from "@mui/icons-material/Psychology";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from "@mui/material";
-// import { Inter } from "next/font/google";
-
-// const inter = Inter({ subsets: ["latin"] });
-
 const drawerWidth = 240;
 
 const paths = {
-  Notes: "/",
-  "Coding Assignments": "/code",
-  "Graded Assignments": "/assignment",
-  "Memory Flashcards": "/flashcard",
+  "Notes": "/instructor/notes",
+  //   'Biology': '/instructor/notes/biology',
+  //   'Math': '/instructor/notes/math',
+  //   'English': '/instructor/notes/english',
+  //   'Computer Science': '/instructor/notes/computer-science',
+  "Coding Assignments": "/instructor/code",
+  "Graded Assignments": "/instructor/GA",
 };
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -85,9 +80,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-const Sidenav = () => {
+const InstructorSidenav = () => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(true); // Always open
   const [isNotesClicked, setIsNotesClicked] = React.useState(false);
   const navigate = useNavigate();
 
@@ -95,48 +90,28 @@ const Sidenav = () => {
     setOpen(true);
   };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const handleNavigation = (path) => {
+    navigate(path);
   };
 
   const handleNotesClick = () => {
     setIsNotesClicked((prev) => !prev);
   };
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
-
   const subjects = ["Biology", "Math", "English", "Computer Science"];
 
-  const material = isNotesClicked
-    ? [
-        "Notes",
-        ...subjects,
-        "Coding Assignments",
-        "Graded Assignments",
-        "Memory Flashcards",
-      ]
-    : [
-        "Notes",
-        "Coding Assignments",
-        "Graded Assignments",
-        "Memory Flashcards",
-      ];
+  const material = ["Notes", "Coding Assignments", "Graded Assignments"];
 
   const icons = {
     Notes: <NotesIcon />,
+    "Coding Assignments": <CodeIcon />,
+    "Graded Assignments": <QuizIcon />,
     Biology: "",
     Math: "",
     English: "",
     "Computer Science": "",
-    "Coding Assignments": <CodeIcon />,
-    "Graded Assignments": <QuizIcon />,
     "Memory Flashcards": <PsychologyIcon />,
   };
-
-  const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
-  console.log("User", user);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -146,19 +121,6 @@ const Sidenav = () => {
           <Typography variant="h6" noWrap component="div">
             Study Buddy
           </Typography>
-          {isAuthenticated ? (
-            <div>
-              <span>Welcome, {user.name}</span>
-              <Button variant="" onClick={() => logout()}>
-                Logout
-              </Button>
-            </div>
-          ) : (
-            <Button variant="" onClick={() => loginWithRedirect()}>
-              Login
-            </Button>
-            // <div></div>
-          )}
         </Toolbar>
       </AppBar>
 
@@ -218,4 +180,4 @@ const Sidenav = () => {
   );
 };
 
-export default Sidenav;
+export default InstructorSidenav;

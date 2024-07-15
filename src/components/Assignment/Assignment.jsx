@@ -29,6 +29,8 @@ import {
 import questions from "./questions";
 import Sidenav from "../Sidenav";
 
+const drawerWidth = 240;
+
 const QuestionCard = ({ question }) => {
   const renderOptions = () => {
     if (question.type === "MCQ") {
@@ -64,12 +66,14 @@ const QuestionCard = ({ question }) => {
   };
 
   return (
-    <Card variant="outlined" style={{ marginBottom: "16px" }}>
-      <CardContent>
-        <Typography variant="h6">{question.text}</Typography>
-        {renderOptions()}
-      </CardContent>
-    </Card>
+    <>
+      <Card variant="outlined" style={{ marginBottom: "16px" }}>
+        <CardContent>
+          <Typography variant="h6">{question.text}</Typography>
+          {renderOptions()}
+        </CardContent>
+      </Card>
+    </>
   );
 };
 
@@ -77,19 +81,33 @@ const Assignment = () => {
   return (
     <>
       <Sidenav />
-      <Container>
-        <Box my={4}>
-          <Typography variant="h4" gutterBottom>
-            SOLVE THIS Assignment
-          </Typography>
-          {questions.map((question) => (
-            <QuestionCard key={question.id} question={question} />
-          ))}
-          <Button variant="contained" color="primary">
-            Submit
-          </Button>
-        </Box>
-      </Container>
+      {/* <Container> */}
+      <Box
+        // component="main"
+        // sx={{
+        //   flexGrow: 1,
+        //   p: 3,
+        //   ml: { sm: `${drawerWidth}px` },
+        //   display: "flex",
+        //   justifyContent: "center",
+        // }}
+        marginLeft="280px"
+        marginRight="40px"
+      >
+        <Typography
+          variant="subtitle1"
+          style={{ marginTop: "10px", color: "red", fontWeight: "bold" }}
+        >
+          Deadline: 2024-12-31 23:59
+        </Typography>
+        {questions.map((question) => (
+          <QuestionCard key={question.id} question={question} />
+        ))}
+        <Button variant="contained" color="primary">
+          Submit
+        </Button>
+      </Box>
+      {/* </Container> */}
     </>
   );
 };

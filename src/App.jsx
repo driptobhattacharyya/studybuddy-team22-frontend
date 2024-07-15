@@ -11,6 +11,7 @@ import Biology from "./components/Notes/Biology";
 import Math from "./components/Notes/Math";
 import English from "./components/Notes/English";
 import ComputerScience from "./components/Notes/ComputerScience.jsx";
+import InstructorNotes from "./components/instructor_Notes/InstructorNotes.jsx";
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
             element={<CourseInstructor />}
           ></Route>
           <Route path="/instructor/GA" exact element={<Instructor />}></Route>
+          <Route path="/instructor/notes" exact element={<InstructorNotes />}></Route>
         </Routes>
       </BrowserRouter>
     </>

@@ -17,6 +17,10 @@ import {
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import InstructorSidenav from "../InstructorSidenav";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 
 const Instructor = () => {
   const [questions, setQuestions] = useState([]);
@@ -26,6 +30,7 @@ const Instructor = () => {
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [lowerBound, setLowerBound] = useState("");
   const [upperBound, setUpperBound] = useState("");
+  const [deadline, setDeadline] = useState(null);
 
   const handleAddOption = () => {
     setOptions([...options, ""]);
@@ -84,10 +89,21 @@ const Instructor = () => {
 
   return (
     <Container>
-      <Box my={4}>
+      <InstructorSidenav />
+      <Box marginLeft="240px" my={4}>
         <Typography variant="h4" gutterBottom>
           Set Questions
         </Typography>
+
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DateTimePicker
+            label="Assignment Deadline"
+            value={deadline}
+            onChange={(date) => setDeadline(date)}
+            renderInput={(params) => <TextField {...params} fullWidth />}
+          />
+        </LocalizationProvider>
+
         <Card variant="outlined" style={{ marginBottom: "16px" }}>
           <CardContent>
             <TextField

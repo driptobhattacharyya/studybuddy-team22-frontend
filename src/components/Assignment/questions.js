@@ -22,6 +22,7 @@ const questions = [
         text: "FIFO is used in which data structure?",
         options: ["Stack", "Queue", "Linked List", "Mujhe kya pata"],
       },
+    
   ];
   
   export default questions;
