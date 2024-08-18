@@ -18,18 +18,19 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" exact element={<Biology />} />
+          <Route path="/" exact element={<Notes />} />
+          <Route path="/notes/:courseId/:courseName" element={<Notes />} />
           <Route path="/assignment" exact element={<Assignment />}></Route>
           <Route path="/code" exact element={<Code />}></Route>
           <Route path="/flashcard" exact element={<FlashcardList />} />
-          <Route path="/notes/biology" exact element={<Biology />} />
+          {/* <Route path="/notes/biology" exact element={<Biology />} />
           <Route path="/notes/math" exact element={<Math />} />
           <Route path="/notes/english" exact element={<English />} />
           <Route
             path="/notes/computer-science"
             exact
             element={<ComputerScience />}
-          />
+          /> */}
           <Route
             path="/instructor/code"
             exact

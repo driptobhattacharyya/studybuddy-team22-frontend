@@ -1,5 +1,5 @@
 // src/components/Notes.jsx
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -28,6 +28,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "@mui/material";
+import axios from "axios";
 // import { Inter } from "next/font/google";
 
 // const inter = Inter({ subsets: ["latin"] });
@@ -60,6 +61,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   })
 );
 
+
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -86,6 +88,20 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const Sidenav = () => {
+  const [allCourses, setAllCourses] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:8000/course/getall")
+      .then((res) => {
+        const courses = {};
+        res.data.forEach(course => {
+          courses[course.course_id] = course.course_name;
+        });
+        setAllCourses(courses);
+      })
+      .catch(err => {
+        console.error("Error fetching courses:", err);
+      });
+  }, []);
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [isNotesClicked, setIsNotesClicked] = React.useState(false);
@@ -106,13 +122,11 @@ const Sidenav = () => {
   const handleNavigation = (path) => {
     navigate(path);
   };
-
-  const subjects = ["Biology", "Math", "English", "Computer Science"];
-
+  
   const material = isNotesClicked
     ? [
         "Notes",
-        ...subjects,
+        ...Object.values(allCourses),
         "Coding Assignments",
         "Graded Assignments",
         "Memory Flashcards",
@@ -126,14 +140,11 @@ const Sidenav = () => {
 
   const icons = {
     Notes: <NotesIcon />,
-    Biology: "",
-    Math: "",
-    English: "",
-    "Computer Science": "",
     "Coding Assignments": <CodeIcon />,
     "Graded Assignments": <QuizIcon />,
     "Memory Flashcards": <PsychologyIcon />,
   };
+  
 
   const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
   console.log("User", user);
@@ -157,7 +168,6 @@ const Sidenav = () => {
             <Button variant="" onClick={() => loginWithRedirect()}>
               Login
             </Button>
-            // <div></div>
           )}
         </Toolbar>
       </AppBar>
@@ -176,7 +186,7 @@ const Sidenav = () => {
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerOpen}>
+          <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
         </DrawerHeader>
@@ -213,6 +223,7 @@ const Sidenav = () => {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
+        {/* Add your main content here */}
       </Main>
     </Box>
   );

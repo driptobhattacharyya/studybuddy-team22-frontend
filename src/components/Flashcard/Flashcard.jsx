@@ -21,13 +21,13 @@ const Flashcard = ( {flashcard} ) => {
      >
       <div className="front">
       <Typography variant="h6" gutterBottom sx={{ color: '#333333' }}>
-        {flashcard.question}
+        {flashcard.title}
       </Typography>
         
       </div>
       <div className="back" ref={backEl}>
       <Typography variant="h6" gutterBottom sx={{ color: '#333333' }}>
-        {flashcard.answer}
+        {flashcard.content}
       </Typography>
       </div>
      </div>

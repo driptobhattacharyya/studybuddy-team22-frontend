@@ -75,25 +75,41 @@ const SAMPLE_FLASHCARDS = [
 // }
 
 const FlashcardList = () => {
-  const [flashcards, setFlashcards] = useState(SAMPLE_FLASHCARDS);
-  // const [categories, setCategories] = useState([])
-  const [subject, setSubject] = useState("Biology");
+  const [flashcards, setFlashcards] = useState([]);
+  const [allCourses, setAllCourses] = useState({});
+  const [subject, setSubject] = useState("Select a Course");
+  
+  useEffect(() => {
+    axios.get('http://localhost:8000/flash_card/getall')
+      .then(res => {
+        setFlashcards(res.data);
+      })
+      .catch(err => {
+        console.error("Error fetching flashcards:", err);
+      });
+  }, []);
+  
+  useEffect(() => {
+    axios.get("http://localhost:8000/course/getall")
+      .then((res) => {
+        const courses = {};
+        res.data.forEach(course => {
+          courses[course.course_id] = course.course_name;
+        });
+        setAllCourses(courses);
+      })
+      .catch(err => {
+        console.error("Error fetching courses:", err);
+      });
+  }, []);
 
-  // Handle change event
   const handleChange = (event) => {
-    // setSubject(event.target.value);
+    setSubject(event.target.value);
   };
+
   const categoryEl = useRef();
 
-  const [curr_category, setCategory] = useState("Biology");
-
-  // useEffect(() => {
-  //   axios
-  //   .get('https://opentdb.com/api_category.php')
-  //   .then(res => {
-  //       console.log(res.data)
-  //   })
-  // }, [])
+  // const [curr_category, setCategory] = useState("Select a Course");
 
   // useEffect(() => {
   //   axios
@@ -103,48 +119,24 @@ const FlashcardList = () => {
   //    })
   // })
 
-  // useEffect(() => {
-  //   axios
-  //    .get('https://opentdb.com/api_category.php') //change flashcard api
-  //    .then(res => {
-  //     setFlashcards(res.data)
-  //    })
-  // })
-
   return (
     <>
       <Sidenav />
       <div style={{ display: "flex", justifyContent: "center" }}>
         <FormControl style={{ width: "10%" }}>
-          {/* <InputLabel id="demo-simple-select-label">Subject</InputLabel> */}
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={subject}
-            label="Subject"
-            // onChange={handleChange}
+            onChange={handleChange}
             align="center"
           >
-            <MenuItem
-              onClick={() => {
-                setSubject("Biology");
-              }}
-              value="Biology"
-            >
-              Biology
-            </MenuItem>
-            <MenuItem onClick={() => setSubject("Math")} value="Math">
-              Math
-            </MenuItem>
-            <MenuItem onClick={() => setSubject("English")} value="English">
-              English
-            </MenuItem>
-            <MenuItem
-              onClick={() => setSubject("Computer Science")}
-              value="Computer Science"
-            >
-              Computer Science
-            </MenuItem>
+            <MenuItem value="Select a Course">Select a Course</MenuItem>
+            {Object.keys(allCourses).map((course_id) => (
+              <MenuItem key={course_id} value={course_id}>
+                {allCourses[course_id]}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
@@ -156,10 +148,10 @@ const FlashcardList = () => {
       <div className="container">
         <div className="card-grid" align="center">
           {flashcards
-            .filter((card) => card.subject === subject)
+            .filter((card) => card.course_id === subject)
             .map((flashcard) => {
               return (
-                <Flashcard flashcard={flashcard} key={flashcard.subject} />
+                <Flashcard flashcard={flashcard} key={flashcard.id} />
               );
             })}
         </div>

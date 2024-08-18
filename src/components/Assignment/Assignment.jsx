@@ -1,17 +1,5 @@
-// const Assignment = () => {
-//   return (
-//     <>
-//      <Sidenav />
-//      <div>
-//         <Typography variant='h3' align='center'> Assignment </Typography>
-//      </div>
-//     </>
-//   );
-// };
-
-// export default Assignment;
-
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -26,18 +14,20 @@ import {
   Checkbox,
   TextField,
 } from "@mui/material";
-import questions from "./questions";
+// import questions from "./questions";
 import Sidenav from "../Sidenav";
+import axios from "axios";
 
 const drawerWidth = 240;
 
 const QuestionCard = ({ question }) => {
+  console.log(question.options);
   const renderOptions = () => {
-    if (question.type === "MCQ") {
+    if (question.q_type === "MCQ") {
       return (
         <FormControl component="fieldset">
           <RadioGroup name={`question-${question.id}`}>
-            {question.options.map((option, index) => (
+            {question.options && question.options.map((option, index) => (
               <FormControlLabel
                 key={index}
                 value={option}
@@ -48,10 +38,10 @@ const QuestionCard = ({ question }) => {
           </RadioGroup>
         </FormControl>
       );
-    } else if (question.type === "MSQ") {
+    } else if (question.q_type === "MSQ") {
       return (
         <FormControl component="fieldset">
-          {question.options.map((option, index) => (
+          {question.options && question.options.map((option, index) => (
             <FormControlLabel
               key={index}
               control={<Checkbox name={`question-${question.id}-${index}`} />}
@@ -69,7 +59,7 @@ const QuestionCard = ({ question }) => {
     <>
       <Card variant="outlined" style={{ marginBottom: "16px" }}>
         <CardContent>
-          <Typography variant="h6">{question.text}</Typography>
+          <Typography variant="h6">{question.question}</Typography>
           {renderOptions()}
         </CardContent>
       </Card>
@@ -78,6 +68,28 @@ const QuestionCard = ({ question }) => {
 };
 
 const Assignment = () => {
+  const [questions, setQuestions] = useState([]);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const course_id = "CS01";
+        const week = 1;
+        const assgn_type = "AQ";
+        const response = await axios.get(
+          `http://localhost:8000/course/get_assignment?course_id=${course_id}&week=${week}&assgn_type=${assgn_type}`
+        );
+        console.log(response.data[0]);
+        if (Array.isArray(response.data)) {
+          setQuestions(response.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+    fetchQuestions();
+  }, []);
   return (
     <>
       <Sidenav />
@@ -100,9 +112,11 @@ const Assignment = () => {
         >
           Deadline: 2024-12-31 23:59
         </Typography>
-        {questions.map((question) => (
-          <QuestionCard key={question.id} question={question} />
-        ))}
+        {questions && Array.isArray(questions) && questions.length > 0 &&
+          questions.map((question) => (
+            <QuestionCard key={question.id} question={question} />
+          ))
+          }
         <Button variant="contained" color="primary">
           Submit
         </Button>
